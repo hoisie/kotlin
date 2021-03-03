@@ -18,10 +18,11 @@ import org.jetbrains.kotlin.resolve.calls.model.DefaultValueArgument
 import org.jetbrains.kotlin.resolve.calls.model.ExpressionValueArgument
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedCall
 import org.jetbrains.kotlin.resolve.calls.model.ResolvedValueArgument
+import org.jetbrains.kotlin.idea.imports.importableFqName
 
-open class JsonFormatRedundantDiagnostic : CallChecker {
-    private val jsonFunName = Name.identifier("Json")
-    private val jsonPackageFqName = FqName("kotlinx.serialization.json")
+
+class JsonFormatRedundantDiagnostic : CallChecker {
+    private val jsonFqName = FqName("kotlinx.serialization.json.Json")
     private val parameterNameFrom = Name.identifier("from")
     private val parameterNameBuilderAction = Name.identifier("builderAction")
 
@@ -45,11 +46,7 @@ open class JsonFormatRedundantDiagnostic : CallChecker {
     }
 
     private fun isJsonFormatCreation(descriptor: SimpleFunctionDescriptor): Boolean {
-        if (!(descriptor.name == jsonFunName && descriptor.extensionReceiverParameter == null && descriptor.valueParameters.size == 2)) {
-            return false
-        }
-        val packageDescriptor = descriptor.containingDeclaration as? PackageFragmentDescriptor ?: return false
-        return packageDescriptor.fqName == jsonPackageFqName
+        return descriptor.importableFqName == jsonFqName
     }
 
     private fun isDefaultFormat(resolvedCall: ResolvedCall<*>): Boolean {

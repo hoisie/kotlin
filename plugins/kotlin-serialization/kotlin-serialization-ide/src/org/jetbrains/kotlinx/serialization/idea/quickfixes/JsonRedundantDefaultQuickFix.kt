@@ -24,7 +24,7 @@ internal class JsonRedundantDefaultQuickFix(expression: KtReferenceExpression) :
 
     override fun getFamilyName(): String = text
 
-    override fun getText(): String = "Replace by Json"
+    override fun getText(): String = KotlinBundle.message("replace.with.0", "Json")
 
     object Factory : KotlinSingleIntentionActionFactory() {
         override fun createAction(diagnostic: Diagnostic): IntentionAction? {
