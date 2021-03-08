@@ -16,9 +16,14 @@
 
 package org.jetbrains.kotlin.integration;
 
+import com.intellij.util.ArrayUtil;
 import org.jetbrains.kotlin.cli.AbstractCliTest;
+import org.jetbrains.kotlin.utils.StringsKt;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class CompilerSmokeTest extends CompilerSmokeTestBase {
 
@@ -246,5 +251,22 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
         // jar.getParentFile().setReadOnly(); // won't work on Windows
         jar.setReadOnly(); // So we use this one as an alternative
         runCompiler("test.compile", "test.kt", "-d", jar.getCanonicalPath());
+    }
+
+    // related to https://github.com/JetBrains/kotlin/pull/4080#issuecomment-791598992
+    public void testPathNameDoesNotNameAParent() throws Exception {
+        String jar = "hello.jar";
+        String workingDirectory = tmpdir.getAbsolutePath();
+        Files.write(Paths.get(workingDirectory + "/Hello.kt"), "class Hello".getBytes());
+
+        Collection<String> javaArgs = new ArrayList<>();
+        javaArgs.add("-cp");
+        javaArgs.add(StringsKt.join(Collections.singletonList(
+                getCompilerLib().getAbsolutePath() + File.separator + "kotlin-compiler.jar"
+        ), File.pathSeparator));
+        javaArgs.add("org.jetbrains.kotlin.cli.jvm.K2JVMCompiler");
+        javaArgs.addAll(Arrays.asList("Hello.kt", "-d", jar));
+
+        runJava(workingDirectory, null, ArrayUtil.toStringArray(javaArgs));
     }
 }
