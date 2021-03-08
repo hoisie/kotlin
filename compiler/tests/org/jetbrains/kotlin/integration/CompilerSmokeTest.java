@@ -16,6 +16,7 @@
 
 package org.jetbrains.kotlin.integration;
 
+import com.intellij.openapi.util.SystemInfo;
 import com.intellij.util.ArrayUtil;
 import org.jetbrains.kotlin.cli.AbstractCliTest;
 import org.jetbrains.kotlin.utils.StringsKt;
@@ -222,9 +223,13 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
         String outputDir = tmpdir.getAbsolutePath() + File.separator + "noPermissionDir";
         File file = new File(outputDir, "Test.class");
         file.getParentFile().mkdirs();
+        if (!SystemInfo.isWindows) {
+            file.getParentFile().setReadOnly(); // won't work on Windows
+            runCompiler("test.notWindows.compile", "test.kt", "-d", outputDir);
+            file.getParentFile().setWritable(true);
+        }
         file.createNewFile();
-        // file.getParentFile().setReadOnly(); // won't work on Windows
-        file.setReadOnly(); // So we use this one as an alternative
+        file.setReadOnly();
         runCompiler("test.compile", "test.kt", "-d", outputDir);
     }
 
@@ -245,15 +250,19 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
         runCompiler("test.compile", "test.kt", "-d", jar);
     }
 
+    // related to KT-18184, destination is a jar, and output directory exists, and permission denied to write jar.
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    // related to KT-18184, Destination is a jar, and output directory exist, and permission denied to write jar.
     public void testDestinationJarNoPermission() throws Exception {
         String outputDir = tmpdir.getAbsolutePath() + File.separator + "noPermissionDir";
         File jar = new File(outputDir, "test.jar");
         jar.getParentFile().mkdirs();
+        if (!SystemInfo.isWindows) {
+            jar.getParentFile().setReadOnly(); // won't work on Windows
+            runCompiler("test.notWindows.compile", "test.kt", "-d", jar.getCanonicalPath());
+            jar.getParentFile().setWritable(true);
+        }
         jar.createNewFile();
-        // jar.getParentFile().setReadOnly(); // won't work on Windows
-        jar.setReadOnly(); // So we use this one as an alternative
+        jar.setReadOnly();
         runCompiler("test.compile", "test.kt", "-d", jar.getCanonicalPath());
     }
 
