@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class CompilerSmokeTest extends CompilerSmokeTestBase {
 
     public void testHelloApp() throws Exception {
@@ -209,7 +210,6 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
     }
 
     // related to KT-14772, destination is not a jar, and clashing with an existing file
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testDestinationDirClashingWithExistingFile() throws Exception {
         String outputDir = tmpdir.getAbsolutePath() + File.separator + "clashingFile";
         File file = new File(outputDir);
@@ -218,7 +218,6 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
     }
 
     // related to KT-18184, destination is not a jar, and permission denied
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testDestinationDirNoPermission() throws Exception {
         String outputDir = tmpdir.getAbsolutePath() + File.separator + "noPermissionDir";
         File file = new File(outputDir, "Test.class");
@@ -242,7 +241,6 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
 
     // related to KT-18184, destination is a jar, and output directory does not exist, and failed to created
     // output directory due to clash with existing file.
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testDestinationJarClashingWithExistingFile() throws Exception {
         String jar = tmpdir.getAbsolutePath() + File.separator + "clashingFile" + File.separator + "test.jar";
         File file = new File(jar);
@@ -251,7 +249,6 @@ public class CompilerSmokeTest extends CompilerSmokeTestBase {
     }
 
     // related to KT-18184, destination is a jar, and output directory exists, and permission denied to write jar.
-    @SuppressWarnings("ResultOfMethodCallIgnored")
     public void testDestinationJarNoPermission() throws Exception {
         String outputDir = tmpdir.getAbsolutePath() + File.separator + "noPermissionDir";
         File jar = new File(outputDir, "test.jar");
