@@ -232,7 +232,7 @@ class Fir2IrImplicitCastInserter(
     private fun IrExpression.insertImplicitNotNullCastIfNeeded(expression: FirExpression): IrExpression {
         // [TypeOperatorLowering] will retrieve the source (from start offset to end offset) as an assertion message.
         // Avoid type casting if we can't determine the source for some reasons, e.g., implicit `this` receiver.
-        if (expression.source == null) {
+        if (expression.source == null || this is IrGetEnumValue) {
             return this
         }
         // Cast type massage 1. Remove @EnhancedNullability
