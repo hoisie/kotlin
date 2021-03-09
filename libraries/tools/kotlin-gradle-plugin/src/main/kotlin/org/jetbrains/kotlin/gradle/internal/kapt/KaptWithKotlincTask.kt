@@ -7,7 +7,6 @@ package org.jetbrains.kotlin.gradle.internal
 
 import com.intellij.openapi.util.SystemInfo
 import org.gradle.api.GradleException
-import org.gradle.api.file.FileCollection
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.InputFiles
 import org.gradle.api.tasks.Internal
@@ -21,7 +20,6 @@ import org.jetbrains.kotlin.gradle.internal.kapt.incremental.KaptIncrementalChan
 import org.jetbrains.kotlin.gradle.internal.tasks.allOutputFiles
 import org.jetbrains.kotlin.gradle.logging.GradleKotlinLogger
 import org.jetbrains.kotlin.gradle.logging.GradlePrintingMessageCollector
-import org.jetbrains.kotlin.gradle.plugin.PLUGIN_CLASSPATH_CONFIGURATION_NAME
 import org.jetbrains.kotlin.gradle.tasks.CompilerPluginOptions
 import org.jetbrains.kotlin.gradle.tasks.GradleCompileTaskProvider
 import org.jetbrains.kotlin.gradle.utils.getValue
@@ -35,14 +33,8 @@ abstract class KaptWithKotlincTask : KaptTask(), CompilerArgumentAwareWithInput<
 
     @get:Classpath
     @get:InputFiles
-    @Suppress("unused")
     internal val kotlinTaskPluginClasspaths
         get() = kotlinCompileTask.pluginClasspath
-
-    @get:Classpath
-    @get:InputFiles
-    val pluginClasspath: FileCollection
-        get() = project.configurations.getByName(PLUGIN_CLASSPATH_CONFIGURATION_NAME)
 
     @get:Internal
     val taskProvider = GradleCompileTaskProvider(this)
@@ -60,7 +52,7 @@ abstract class KaptWithKotlincTask : KaptTask(), CompilerArgumentAwareWithInput<
             ignoreClasspathResolutionErrors
         ))
 
-        args.pluginClasspaths = pluginClasspath.toSortedPathsArray()
+        args.pluginClasspaths = kotlinTaskPluginClasspaths.toSortedPathsArray()
 
         val pluginOptionsWithKapt: CompilerPluginOptions = pluginOptions.withWrappedKaptOptions(
             withApClasspath = kaptClasspath,

@@ -67,11 +67,11 @@ class SubpluginEnvironment(
             project.logger.kotlinDebug { "Loading subplugin $pluginId" }
 
             subplugin.getPluginArtifact().let { artifact ->
-                project.addMavenDependency(PLUGIN_CLASSPATH_CONFIGURATION_NAME, artifact)
+                project.addMavenDependency(kotlinCompilation.pluginConfigurationName, artifact)
             }
 
             subplugin.getPluginArtifactForNative()?.let { artifact ->
-                project.addMavenDependency(NATIVE_COMPILER_PLUGIN_CLASSPATH_CONFIGURATION_NAME, artifact)
+                project.addMavenDependency(kotlinCompilation.pluginConfigurationName, artifact)
             }
 
             val subpluginOptionsProvider = subplugin.applyToCompilation(kotlinCompilation)
