@@ -22,6 +22,8 @@ import org.jetbrains.kotlin.ir.util.render
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
+import org.jetbrains.kotlin.js.backend.ast.JsDeclarationScope.Companion.RESERVED_WORDS
+import org.jetbrains.kotlin.js.backend.ast.JsDeclarationScope.Companion.SPECIAL_RESERVED_WORDS
 import org.jetbrains.kotlin.js.naming.isES5IdentifierPart
 import org.jetbrains.kotlin.js.naming.isES5IdentifierStart
 import org.jetbrains.kotlin.name.FqName
@@ -352,8 +354,14 @@ class NameTables(
             declaration !is IrDeclarationWithName ->
                 return
 
-            declaration.isEffectivelyExternal() && (declaration.getJsModule() == null || declaration.isJsNonModule()) ->
-                globalNames.declareStableName(declaration, declaration.getJsNameOrKotlinName().identifier)
+            declaration.isEffectivelyExternal() && (declaration.getJsModule() == null || declaration.isJsNonModule()) -> {
+                val name = declaration.getJsNameOrKotlinName().identifier
+                if (declaration is IrProperty && name in SPECIAL_RESERVED_WORDS) {
+                    globalNames.declareFreshName(declaration, declaration.name.asString())
+                } else {
+                    globalNames.declareStableName(declaration, name)
+                }
+            }
 
             else ->
                 globalNames.declareFreshName(declaration, declaration.name.asString())

@@ -5349,6 +5349,11 @@ public class IrBoxJsES6TestGenerated extends AbstractIrBoxJsES6Test {
             runTest("js/js.translator/testData/box/jsName/classes.kt");
         }
 
+        @TestMetadata("defaultJsName.kt")
+        public void testDefaultJsName() throws Exception {
+            runTest("js/js.translator/testData/box/jsName/defaultJsName.kt");
+        }
+
         @TestMetadata("inheritFromRenamedNativeClass.kt")
         public void testInheritFromRenamedNativeClass() throws Exception {
             runTest("js/js.translator/testData/box/jsName/inheritFromRenamedNativeClass.kt");
