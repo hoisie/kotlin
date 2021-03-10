@@ -15,6 +15,7 @@ dependencies {
     compileOnly(commonDep("com.google.code.findbugs", "jsr305"))
 
     compileOnly(intellijPluginDep("java"))
+    compileOnly(intellijPluginDep("gradle"))
 
     compileOnly(intellijPluginDep("junit"))
     compileOnly(intellijPluginDep("testng"))
