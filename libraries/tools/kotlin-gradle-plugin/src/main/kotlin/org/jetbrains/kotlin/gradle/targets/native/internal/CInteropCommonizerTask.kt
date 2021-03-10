@@ -31,7 +31,7 @@ import org.jetbrains.kotlin.gradle.tasks.CInteropProcess
 import org.jetbrains.kotlin.konan.target.KonanTarget
 import java.io.File
 
-open class CInteropCommonizerTask : DefaultTask() {
+internal open class CInteropCommonizerTask : DefaultTask() {
 
     internal data class CInteropGist(
         @get:Input val identifier: CInteropIdentifier,
