@@ -64,7 +64,7 @@ More details are available in
 
 _Kotlin/Native_ provides efficient bidirectional interoperability with C and Objective-C.
 See the [samples](https://github.com/JetBrains/kotlin-native/tree/master/samples),
-[the documentation and the tutorials](https://kotlinlang.org/docs/tutorials/).
+[the documentation and the tutorials](https://kotlinlang.org/docs/native-c-interop.html).
 
   ## Getting Started ##
   
