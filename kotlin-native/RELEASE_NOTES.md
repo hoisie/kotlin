@@ -63,8 +63,8 @@ More details are available in
 ["Kotlin/Native Memory Management Roadmap"](https://blog.jetbrains.com/kotlin/2020/07/kotlin-native-memory-management-roadmap/).
 
 _Kotlin/Native_ provides efficient bidirectional interoperability with C and Objective-C.
-See the [samples](https://github.com/JetBrains/kotlin-native/tree/master/samples)
-and the [tutorials](https://kotlinlang.org/docs/tutorials/).
+See the [samples](https://github.com/JetBrains/kotlin-native/tree/master/samples),
+[the documentation and the tutorials](https://kotlinlang.org/docs/tutorials/).
 
   ## Getting Started ##
   
