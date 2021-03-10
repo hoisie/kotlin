@@ -136,7 +136,8 @@ class KotlinSourceSetGraphUtilTest {
 
 private fun createKotlinSourceSetPair(
     name: String,
-    dependsOnSourceSets: Set<String> = emptySet(),
+    declaredDependsOnSourceSets: Set<String> = emptySet(),
+    allDependsOnSourceSets: Set<String> = declaredDependsOnSourceSets,
     platforms: Set<KotlinPlatform> = emptySet(),
     isTestModule: Boolean = false,
 ): Pair<String, KotlinSourceSet> = name to KotlinSourceSetImpl(
@@ -154,8 +155,10 @@ private fun createKotlinSourceSetPair(
     sourceDirs = emptySet(),
     resourceDirs = emptySet(),
     dependencies = emptyArray(),
-    dependsOnSourceSets = dependsOnSourceSets,
-    defaultPlatform = KotlinPlatformContainerImpl().apply { addSimplePlatforms(platforms) },
+    declaredDependsOnSourceSets = declaredDependsOnSourceSets,
+    allDependsOnSourceSets = allDependsOnSourceSets,
+    defaultActualPlatforms = KotlinPlatformContainerImpl().apply { pushPlatforms(platforms) },
+    defaultIsTestModule = isTestModule
 )
 
 private fun Graph<KotlinSourceSet>.nameEdges() = edges()

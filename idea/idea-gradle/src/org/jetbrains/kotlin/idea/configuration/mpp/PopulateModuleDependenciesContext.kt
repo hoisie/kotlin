@@ -66,7 +66,6 @@ internal fun PopulateModuleDependenciesContext.getDependencies(module: KotlinMod
     return dependenciesPreprocessor(module.dependencies.mapNotNull { id -> mppModel.dependencyMap[id] })
 }
 
-@OptIn(ExperimentalKotlinMPPGradleModelExtensionsApi::class)
 internal fun PopulateModuleDependenciesContext.getCompilationsWithDependencies(
     sourceSet: KotlinSourceSet
 ): List<CompilationWithDependencies> {
@@ -74,13 +73,13 @@ internal fun PopulateModuleDependenciesContext.getCompilationsWithDependencies(
 }
 
 internal fun KotlinCompilation.dependsOnSourceSet(mppModel: KotlinMPPGradleModel, sourceSet: KotlinSourceSet): Boolean {
-    return allSourceSets.any { containedSourceSet -> sourceSet.isOrDependsOnSourceSet(mppModel, containedSourceSet) }
+    return declaredSourceSets.any { containedSourceSet -> sourceSet.isOrDependsOnSourceSet(mppModel, containedSourceSet) }
 }
 
 internal fun KotlinSourceSet.isOrDependsOnSourceSet(mppModel: KotlinMPPGradleModel, sourceSet: KotlinSourceSet): Boolean {
     if (this == sourceSet) return true
-    return this.dependsOnSourceSets
-        .map { dependencySourceSetName -> mppModel.sourceSets.getValue(dependencySourceSetName) }
+    return this.declaredDependsOnSourceSets
+        .map { dependencySourceSetName -> mppModel.sourceSetsByName.getValue(dependencySourceSetName) }
         .any { dependencySourceSet -> dependencySourceSet.isOrDependsOnSourceSet(mppModel, sourceSet) }
 }
 

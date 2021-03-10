@@ -65,7 +65,7 @@ private data class DependencyPopulationSettings(
 private fun dependencyPopulationSettings(mppModel: KotlinMPPGradleModel, sourceSet: KotlinSourceSet): DependencyPopulationSettings {
     val forceNativeDependencyPropagation: Boolean
     val excludeInheritedNativeDependencies: Boolean
-    if (mppModel.extraFeatures.isHMPPEnabled && sourceSet.actualPlatforms.getSinglePlatform() == KotlinPlatform.NATIVE) {
+    if (mppModel.extraFeatures.isHMPPEnabled && sourceSet.actualPlatforms.singleOrNull() == KotlinPlatform.NATIVE) {
         forceNativeDependencyPropagation = mppModel.extraFeatures.isNativeDependencyPropagationEnabled
         excludeInheritedNativeDependencies = !forceNativeDependencyPropagation
     } else {
@@ -212,7 +212,7 @@ private fun KotlinMPPGradleProjectResolver.Companion.populateSourceSetInfos(
     val dependeeSourceSets = closedSourceSetGraph.successors(sourceSet)
     val sourceSetInfos = if (isAndroid) {
         ideModule.kotlinAndroidSourceSets?.filter {
-            (it.kotlinModule as? KotlinCompilation)?.allSourceSets?.contains(sourceSet) ?: false
+            (it.kotlinModule as? KotlinCompilation)?.declaredSourceSets?.contains(sourceSet) ?: false
         } ?: emptyList()
     } else {
         listOfNotNull(fromDataNode.kotlinSourceSet)
