@@ -158,7 +158,7 @@ data class KotlinCompilationImpl(
     override lateinit var platform: KotlinPlatform
         internal set
 
-
+    // TODO: Logic like this is duplicated *and different*
     override val isTestModule: Boolean
         get() = name == KotlinCompilation.TEST_COMPILATION_NAME
                 || platform == KotlinPlatform.ANDROID && name.contains("Test")
