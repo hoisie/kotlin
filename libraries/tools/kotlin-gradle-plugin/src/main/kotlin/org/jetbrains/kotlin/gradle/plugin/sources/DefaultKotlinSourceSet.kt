@@ -72,7 +72,7 @@ class DefaultKotlinSourceSet(
     }
 
     override fun languageSettings(configure: LanguageSettingsBuilder.() -> Unit): LanguageSettingsBuilder =
-            languageSettings.apply { configure(this) }
+        languageSettings.apply { configure(this) }
 
     override fun getName(): String = displayName
 
@@ -232,6 +232,12 @@ internal fun KotlinSourceSet.disambiguateName(simpleName: String): String {
 private fun createDefaultSourceDirectorySet(project: Project, name: String?): SourceDirectorySet =
     project.objects.sourceDirectorySet(name, name)
 
+
+@Deprecated(
+    "Use 'getAllDependsOnSourceSets' instead",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("getAllDependsOnSourceSets")
+)
 internal fun KotlinSourceSet.getSourceSetHierarchy(): Set<KotlinSourceSet> {
     val result = mutableSetOf<KotlinSourceSet>()
 
@@ -245,10 +251,10 @@ internal fun KotlinSourceSet.getSourceSetHierarchy(): Set<KotlinSourceSet> {
     return result
 }
 
+internal fun KotlinSourceSet.resolveAllDependsOnSourceSets(): Set<KotlinSourceSet> {
+    return transitiveClosure { dependsOn }
+}
 
-private fun <T> Class<T>.constructorOrNull(vararg parameterTypes: Class<*>): Constructor<T>? =
-    try {
-        getConstructor(*parameterTypes)
-    } catch (e: NoSuchMethodException) {
-        null
-    }
+internal fun Iterable<KotlinSourceSet>.resolveAllDependsOnSourceSets(): Set<KotlinSourceSet> {
+    return flatMapTo(mutableSetOf()) { it.resolveAllDependsOnSourceSets() }
+}
