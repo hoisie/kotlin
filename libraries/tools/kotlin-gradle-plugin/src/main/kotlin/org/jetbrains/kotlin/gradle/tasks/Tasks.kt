@@ -217,7 +217,9 @@ abstract class AbstractKotlinCompile<T : CommonCompilerArguments>() : AbstractKo
 
     @get:InputFiles
     @get:Classpath
-    open val pluginClasspath: FileCollection = project.configurations.getByName(taskData.compilation.pluginConfigurationName)
+    open val pluginClasspath: FileCollection by lazy {
+        project.configurations.getByName(taskData.compilation.pluginConfigurationName)
+    }
 
     @get:Internal
     internal val pluginOptions = CompilerPluginOptions()
