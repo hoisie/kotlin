@@ -14,7 +14,13 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.protobuf.MessageLite
 import java.io.*
 
-class JarSnapshot(val protos: MutableMap<FqName, ProtoData>) {
+interface JarSnapshot {
+    val protos: MutableMap<FqName, ProtoData>
+}
+
+
+
+class JarSnapshotImpl(override val protos: MutableMap<FqName, ProtoData>) : JarSnapshot {
 
     companion object {
         fun ObjectInputStream.readStringArray(): Array<String> {
@@ -28,7 +34,7 @@ class JarSnapshot(val protos: MutableMap<FqName, ProtoData>) {
         }
 
 
-        fun ObjectInputStream.readJarSnapshot(): JarSnapshot {
+        fun ObjectInputStream.readJarSnapshot(): JarSnapshotImpl {
             // Format:
             // numRecords: Int
             // record {
@@ -58,7 +64,7 @@ class JarSnapshot(val protos: MutableMap<FqName, ProtoData>) {
                     mutableMap[fqName] = PackagePartProtoData(proto, nameResolver, packageFqName)
                 }
             }
-            return JarSnapshot(mutableMap)
+            return JarSnapshotImpl(mutableMap)
         }
 
         fun ObjectOutputStream.writeStringArray(stringArray: Array<String>) {

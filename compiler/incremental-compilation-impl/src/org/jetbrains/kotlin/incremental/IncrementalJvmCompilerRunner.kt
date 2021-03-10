@@ -185,7 +185,7 @@ class IncrementalJvmCompilerRunner(
             .filter { it.extension.equals("jar", ignoreCase = true) }
             .forEach {
                 modulesApiHistory.jarSnapshot(it)?.let { file ->
-                    JarSnapshot.read(file, reporter)?.also { jarSnapshot -> jarSnapshots[it.absolutePath] = jarSnapshot }
+                    JarSnapshotImpl.read(file, reporter)?.also { jarSnapshot -> jarSnapshots[it.absolutePath] = jarSnapshot }
                 }
             }
         return jarSnapshots
@@ -209,9 +209,6 @@ class IncrementalJvmCompilerRunner(
                                 jarSnapshots, withSnapshot, caches.platformCache, scopes)
         }
 
-        if (System.currentTimeMillis() > 2) {
-            System.out.println("test")
-        }
 
         @Suppress("UNUSED_VARIABLE") // for sealed when
         val unused = when (classpathChanges) {

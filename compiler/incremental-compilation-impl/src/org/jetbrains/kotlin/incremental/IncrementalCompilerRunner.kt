@@ -93,11 +93,14 @@ abstract class IncrementalCompilerRunner<
         var caches = createCacheManager(args, projectDir)
 
         //TODO if jar-snapshot is corrupted unable to rebuild. Should roll back to withSnapshot = false?
-        val classpathJarSnapshot = if (withSnapshot) {
-            setupJarDependencies(args, withSnapshot, reporter)
-        } else {
-           emptyMap()
-        }
+        val classpathJarSnapshot =
+            if (withSnapshot) {
+                reporter.measure(BuildTime.SET_UP_JAR_SNAPSHOTS) {
+                    setupJarDependencies(args, withSnapshot, reporter)
+                }
+            } else {
+                emptyMap()
+            }
 
         fun rebuild(reason: BuildAttribute): ExitCode {
             reporter.report { "Non-incremental compilation will be performed: $reason" }
@@ -135,7 +138,7 @@ abstract class IncrementalCompilerRunner<
 
             val exitCode = when (compilationMode) {
                 is CompilationMode.Incremental -> {
-                    val jarSnapshot = JarSnapshot.read(jarSnapshotFile, reporter)
+                    val jarSnapshot = JarSnapshotImpl.read(jarSnapshotFile, reporter)
                     if (jarSnapshot != null) {
                         compileIncrementally(
                             args,
@@ -289,7 +292,7 @@ abstract class IncrementalCompilerRunner<
         compilationMode: CompilationMode,
         originalMessageCollector: MessageCollector,
         withSnapshot: Boolean,
-        jarSnapshot: JarSnapshot = JarSnapshot(mutableMapOf()),
+        jarSnapshot: JarSnapshot = JarSnapshotImpl(mutableMapOf()),
         classpathJarSnapshot: Map<String, JarSnapshot> = HashMap()
     ): ExitCode {
         preBuildHook(args, compilationMode)
@@ -410,12 +413,15 @@ abstract class IncrementalCompilerRunner<
         }
 
         if (exitCode == ExitCode.OK) {
-            BuildInfo.write(currentBuildInfo, lastBuildInfoFile)
+            reporter.measure(BuildTime.STORE_BUILD_INFO) {
+                BuildInfo.write(currentBuildInfo, lastBuildInfoFile)
 
-            //write jar snapshot
-            if (withSnapshot) {
-                //TODO check method/class remove
-                JarSnapshot.write(jarSnapshot, jarSnapshotFile)
+                //write jar snapshot
+                if (withSnapshot) {
+                    //TODO check method/class remove
+
+                    JarSnapshotImpl.write(jarSnapshot, jarSnapshotFile)
+                }
             }
         }
         if (exitCode == ExitCode.OK && compilationMode is CompilationMode.Incremental) {

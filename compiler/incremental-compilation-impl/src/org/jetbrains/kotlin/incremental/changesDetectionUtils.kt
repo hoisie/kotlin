@@ -45,7 +45,7 @@ internal fun getClasspathChanges(
     if (modifiedClasspath.isEmpty()) return ChangesEither.Known()
 
     if (withSnapshot) {
-        fun analyzeJaFiles(): ChangesEither {
+        fun analyzeJarFiles(): ChangesEither {
             val symbols = HashSet<LookupSymbol>()
             val fqNames = HashSet<FqName>()
 
@@ -63,8 +63,8 @@ internal fun getClasspathChanges(
             }
             return ChangesEither.Known(symbols, fqNames)
         }
-        return reporter.measure(BuildTime.IC_ANALYZE_HISTORY_FILES) {
-            analyzeJaFiles()
+        return reporter.measure(BuildTime.IC_ANALYZE_JAR_FILES) {
+            analyzeJarFiles()
         }
     } else {
         val lastBuildTS = lastBuildInfo.startTS

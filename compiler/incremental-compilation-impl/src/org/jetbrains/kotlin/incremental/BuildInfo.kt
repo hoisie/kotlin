@@ -16,8 +16,8 @@
 
 package org.jetbrains.kotlin.incremental
 
-import org.jetbrains.kotlin.incremental.JarSnapshot.Companion.readJarSnapshot
-import org.jetbrains.kotlin.incremental.JarSnapshot.Companion.writeJarSnapshot
+import org.jetbrains.kotlin.incremental.JarSnapshotImpl.Companion.readJarSnapshot
+import org.jetbrains.kotlin.incremental.JarSnapshotImpl.Companion.writeJarSnapshot
 import java.io.*
 
 data class BuildInfo(val startTS: Long, val dependencyToJarSnapshot: Map<String, JarSnapshot> = mapOf()) : Serializable {

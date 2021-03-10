@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.metadata.deserialization.Flags
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.resolve.sam.SAM_LOOKUP_NAME
 
-//TODO Should be in gradle daemon so move it. Only for test here
+//TODO Should be in gradle daemon.
 class JarSnapshotDiffService() {
 
     companion object {
